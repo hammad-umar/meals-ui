@@ -1,10 +1,10 @@
 {
-  "name": "typescript-nextjs-starter",
-  "description": "A TypeScript starter for Next.js that includes all you need to build amazing projects",
+  "name": "meals-ui",
+  "description": "Frontend for meals planner project",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "author": "João Pedro Schmitz (@jpedroschmitz)",
+  "author": "Hammad Umar (@hammad-umar)",
   "license": "MIT",
   "keywords": [
     "nextjs",
