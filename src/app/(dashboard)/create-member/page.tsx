@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NextPage } from 'next';
-import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -10,39 +9,41 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const registerSchema = z.object({
+const memberSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long.'),
   email: z.string().email('Provide a valid email address.'),
-  password: z.string().min(8, 'Password must be at least 8 characters long.'),
+  dietaryRestrictions: z.string().nonempty('Please select a dietary restriction.'),
 });
 
-export type RegisterSchemaType = z.infer<typeof registerSchema>;
+export type MemberSchemaType = z.infer<typeof memberSchema>;
 
-const RegisterPage: NextPage = () => {
+const CreateMemberPage: NextPage = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterSchemaType>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<MemberSchemaType>({
+    resolver: zodResolver(memberSchema),
   });
 
-  const onSubmit = (data: RegisterSchemaType) => {
-    console.log('Register Data:', data);
+  const onSubmit = (data: MemberSchemaType) => {
+    console.log('Member Data:', data);
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader>
-          <CardTitle className="text-center text-2xl font-semibold">Register</CardTitle>
+          <CardTitle className="text-center text-2xl font-semibold">Create Member</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <Label htmlFor="name">Name</Label>
-              <Input id="name" type="text" {...register('name')} className="mt-1" />
+              <Input id="name" {...register('name')} className="mt-1" />
               {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
             </div>
 
@@ -53,21 +54,24 @@ const RegisterPage: NextPage = () => {
             </div>
 
             <div>
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" {...register('password')} className="mt-1" />
-              {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
+              <Label htmlFor="dietaryRestrictions">Dietary Restrictions</Label>
+              <Select onValueChange={(value) => setValue('dietaryRestrictions', value)}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Select an option" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="vegetarian">Vegetarian</SelectItem>
+                  <SelectItem value="gluten-free">Gluten-Free</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.dietaryRestrictions && (
+                <p className="text-sm text-red-500">{errors.dietaryRestrictions.message}</p>
+              )}
             </div>
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Registering...' : 'Register'}
+              {isSubmitting ? 'Submitting...' : 'Create Member'}
             </Button>
-
-            <div className="flex flex-row items-center justify-center gap-2">
-              <p className="text-sm text-gray-800">Already have an account?</p>
-              <Link className="text-sm text-blue-700 underline" href="/login">
-                Login
-              </Link>
-            </div>
           </form>
         </CardContent>
       </Card>
@@ -75,4 +79,4 @@ const RegisterPage: NextPage = () => {
   );
 };
 
-export default RegisterPage;
+export default CreateMemberPage;
