@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useRegister } from '@/hooks/useRegister';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long.'),
@@ -17,9 +18,11 @@ const registerSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters long.'),
 });
 
-export type RegisterSchemaType = z.infer<typeof registerSchema>;
+type RegisterSchemaType = z.infer<typeof registerSchema>;
 
 const RegisterPage: NextPage = () => {
+  const { isLoading, mutate } = useRegister();
+
   const {
     register,
     handleSubmit,
@@ -28,8 +31,8 @@ const RegisterPage: NextPage = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: RegisterSchemaType) => {
-    console.log('Register Data:', data);
+  const onSubmit = (data: RegisterSchemaType): void => {
+    mutate(data);
   };
 
   return (
@@ -58,8 +61,8 @@ const RegisterPage: NextPage = () => {
               {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Registering...' : 'Register'}
+            <Button type="submit" className="w-full" disabled={isSubmitting || isLoading}>
+              {isSubmitting || isLoading ? 'Registering...' : 'Register'}
             </Button>
 
             <div className="flex flex-row items-center justify-center gap-2">

@@ -4,7 +4,7 @@ import { destroyCookie, parseCookies } from 'nookies';
 import { store } from '../../zustand/store';
 
 export const axiosClient: AxiosInstance = axios.create({
-  baseURL: '',
+  baseURL: 'http://localhost:3000/api',
 });
 
 axiosClient.interceptors.request.use(

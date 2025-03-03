@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NextPage } from 'next';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useCreateMember } from '@/hooks/useCreateMember';
 
 const memberSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long.'),
@@ -17,20 +19,28 @@ const memberSchema = z.object({
   dietaryRestrictions: z.string().nonempty('Please select a dietary restriction.'),
 });
 
-export type MemberSchemaType = z.infer<typeof memberSchema>;
+type MemberSchemaType = z.infer<typeof memberSchema>;
 
 const CreateMemberPage: NextPage = () => {
+  const { isLoading, mutate } = useCreateMember();
+
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<MemberSchemaType>({
     resolver: zodResolver(memberSchema),
   });
 
-  const onSubmit = (data: MemberSchemaType) => {
-    console.log('Member Data:', data);
+  const onSubmit = (data: MemberSchemaType): void => {
+    mutate(data, {
+      onSuccess: () => {
+        toast.success('Member is created.');
+        reset({ name: '', email: '', dietaryRestrictions: '' });
+      },
+    });
   };
 
   return (
@@ -69,8 +79,8 @@ const CreateMemberPage: NextPage = () => {
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Submitting...' : 'Create Member'}
+            <Button type="submit" className="w-full" disabled={isSubmitting || isLoading}>
+              {isSubmitting || isLoading ? 'Submitting...' : 'Create Member'}
             </Button>
           </form>
         </CardContent>

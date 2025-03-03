@@ -10,15 +10,18 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useLogin } from '@/hooks/useLogin';
 
 const loginSchema = z.object({
   email: z.string().email('Provide a valid email address.'),
   password: z.string().min(8, 'Password must be at least 8 characters long.'),
 });
 
-export type LoginSchemaType = z.infer<typeof loginSchema>;
+type LoginSchemaType = z.infer<typeof loginSchema>;
 
 const LoginPage: NextPage = () => {
+  const { isLoading, mutate } = useLogin();
+
   const {
     register,
     handleSubmit,
@@ -27,8 +30,8 @@ const LoginPage: NextPage = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginSchemaType) => {
-    console.log('Login Data:', data);
+  const onSubmit = (data: LoginSchemaType): void => {
+    mutate(data);
   };
 
   return (
@@ -51,8 +54,8 @@ const LoginPage: NextPage = () => {
               {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Logging in...' : 'Login'}
+            <Button type="submit" className="w-full" disabled={isSubmitting || isLoading}>
+              {isSubmitting || isLoading ? 'Logging in...' : 'Login'}
             </Button>
 
             <div className="flex flex-row items-center justify-center gap-2">

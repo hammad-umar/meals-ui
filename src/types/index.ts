@@ -3,3 +3,28 @@ export interface User {
   name: string;
   email: string;
 }
+
+export interface Member extends User {
+  dietaryRestrictions: string;
+}
+
+export interface RegisterRequest extends Pick<User, 'name' | 'email'> {
+  password: string;
+}
+
+export interface RegisterResponse {
+  message: string;
+  user: User;
+}
+
+export type LoginRequest = Pick<RegisterRequest, 'email' | 'password'>;
+
+export interface LoginResponse extends RegisterResponse {
+  accessToken: string;
+}
+
+export interface GetMealDetailsResponse {
+  meals: string[];
+  createdAt: string;
+  updatedAt: string;
+}
