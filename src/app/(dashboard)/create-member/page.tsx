@@ -1,7 +1,9 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { NextPage } from 'next';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import * as z from 'zod';
@@ -24,11 +26,13 @@ type MemberSchemaType = z.infer<typeof memberSchema>;
 const CreateMemberPage: NextPage = () => {
   const { isLoading, mutate } = useCreateMember();
 
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const {
     register,
     handleSubmit,
     setValue,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<MemberSchemaType>({
     resolver: zodResolver(memberSchema),
@@ -38,7 +42,8 @@ const CreateMemberPage: NextPage = () => {
     mutate(data, {
       onSuccess: () => {
         toast.success('Member is created.');
-        reset({ name: '', email: '', dietaryRestrictions: '' });
+        queryClient.invalidateQueries({ queryKey: ['members'] });
+        router.push('/members');
       },
     });
   };
