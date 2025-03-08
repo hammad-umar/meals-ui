@@ -1,4 +1,5 @@
 import { Trash2 } from 'lucide-react';
+import Image from 'next/image';
 import { FC } from 'react';
 
 interface TestimonialCardProps {
@@ -20,6 +21,8 @@ const TestimonialCard: FC<TestimonialCardProps> = ({
   projectName,
   projectDescription,
 }) => {
+  const images = ['/caro-img.png', '/caro-2-img.png', '/caro-3-img.png'];
+
   return (
     <div className="bg-white rounded-2xl p-5 w-full max-w-md">
       {/* Header */}
@@ -53,6 +56,15 @@ const TestimonialCard: FC<TestimonialCardProps> = ({
           projectDescription
         )}
       </p>
+
+      {/* Carousel */}
+      {images.length > 0 && (
+        <div className="mt-4 flex gap-2">
+          {images.map((src, index) => (
+            <Image key={index} src={src} alt={`image-${index}`} width={70} height={70} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

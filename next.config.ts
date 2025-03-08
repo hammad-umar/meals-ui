@@ -63,6 +63,13 @@ const nextConfig: NextConfig = {
     return redirects;
   },
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        hostname: 'fakeimg.pl',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
