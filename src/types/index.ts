@@ -28,3 +28,15 @@ export interface GetMealDetailsResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Testimonial {
+  _id: string;
+  userName: string;
+  gender: string;
+  age: number;
+  projectName: string;
+  projectDescription: string;
+  ethnicity: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
