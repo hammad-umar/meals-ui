@@ -37,6 +37,6 @@ export interface Testimonial {
   projectName: string;
   projectDescription: string;
   ethnicity: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }

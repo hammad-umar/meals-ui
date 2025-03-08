@@ -40,6 +40,9 @@ const HomePage: NextPage = () => {
         <Link className="underline text-md text-blue-700" href="/members">
           All Members
         </Link>
+        <Link className="underline text-md text-blue-700" href="/testimonials">
+          All Testimonials
+        </Link>
       </div>
     </div>
   );
